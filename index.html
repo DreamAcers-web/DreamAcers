@@ -81,6 +81,7 @@
             z-index: 1000;
             backdrop-filter: blur(10px);
             box-shadow: 0 2px 20px rgba(0, 119, 230, 0.1);
+            transition: all 0.3s ease;
         }
 
         .logo {
@@ -121,6 +122,16 @@
             width: 100%;
         }
 
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--dark-blue);
+            cursor: pointer;
+        }
+
         /* Hero Section */
         .hero {
             height: 100vh;
@@ -155,6 +166,8 @@
             font-weight: 600;
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(77, 166, 255, 0.3);
+            border: none;
+            cursor: pointer;
         }
 
         .cta-button:hover {
@@ -264,6 +277,26 @@
             display: block;
         }
 
+        /* Stats Section */
+        .stats {
+            padding: 80px 5%;
+            background: var(--dark-blue);
+            color: white;
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .stat-item h3 {
+            font-size: 2.5rem;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
         /* Contact Section */
         .contact {
             padding: 100px 5%;
@@ -300,6 +333,7 @@
             border-radius: 50%;
             font-size: 1.2rem;
             transition: all 0.3s ease;
+            text-decoration: none;
         }
 
         .social-link:hover {
@@ -398,6 +432,22 @@
 
             .nav-links {
                 display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: white;
+                flex-direction: column;
+                padding: 1rem 0;
+                box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
             }
 
             .hero-content {
@@ -418,6 +468,23 @@
         .fade-in {
             animation: fadeIn 1s ease forwards;
         }
+
+        /* Loading Animation */
+        .loader {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -430,14 +497,17 @@
             <a href="#about">About</a>
             <a href="#contact">Contact</a>
         </div>
+        <button class="mobile-menu-btn">
+            <i class="fas fa-bars"></i>
+        </button>
     </nav>
 
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-content fade-in">
-            <h1>CREATIVE VISIONS, TANGIBLE RESULTS</h1>
-            <p class="hero-subtitle">Dream Acers is a full-service creative agency specializing in transforming ideas into compelling visual stories that captivate audiences and drive business growth.</p>
-            <a href="#contact" class="cta-button">Launch Your Project</a>
+            <h1>YOUR VISION, OUR CREATIVITY</h1>
+            <p class="hero-subtitle">Dream Acers transforms ideas into compelling visual stories that captivate audiences and drive business growth. Our first campaigns launch this October.</p>
+            <a href="#contact" class="cta-button">Start Your Project <i class="fas fa-arrow-right"></i></a>
         </div>
     </section>
 
@@ -466,6 +536,28 @@
                     <h3>Poster Series</h3>
                     <p>Outdoor and digital visual campaign</p>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <h3>4</h3>
+                <p>Creative Experts</p>
+            </div>
+            <div class="stat-item">
+                <h3>9+</h3>
+                <p>Services Offered</p>
+            </div>
+            <div class="stat-item">
+                <h3>100%</h3>
+                <p>Client Focus</p>
+            </div>
+            <div class="stat-item">
+                <h3>Oct 2025</h3>
+                <p>First Launch</p>
             </div>
         </div>
     </section>
@@ -560,7 +652,7 @@
                     <a href="https://instagram.com/dreamacers_fvr" class="social-link">
                         <i class="fab fa-instagram"></i>
                     </a>
-                    <a href="https://wa.me/+263775416045" class="social-link">
+                    <a href="https://wa.me/0775416045" class="social-link">
                         <i class="fab fa-whatsapp"></i>
                     </a>
                 </div>
@@ -595,7 +687,9 @@
                         <label for="message">Project Details</label>
                         <textarea id="message" placeholder="Tell us about your project..." required></textarea>
                     </div>
-                    <button type="submit" class="cta-button" style="width: 100%;">Send Message</button>
+                    <button type="submit" class="cta-button" style="width: 100%;" id="submitBtn">
+                        <span class="btn-text">Send Message</span>
+                    </button>
                 </form>
             </div>
         </div>
@@ -615,10 +709,21 @@
     </footer>
 
     <script>
+        // Mobile menu toggle
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
         // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
+                // Close mobile menu if open
+                navLinks.classList.remove('active');
+                
                 document.querySelector(this.getAttribute('href')).scrollIntoView({
                     behavior: 'smooth'
                 });
@@ -637,11 +742,26 @@
             }
         });
 
-        // Form submission
+        // Form submission with loading state
         document.getElementById('projectForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            alert('Thank you for your message! We will get back to you within 24 hours.');
-            this.reset();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const btnText = submitBtn.querySelector('.btn-text');
+            
+            // Show loading state
+            btnText.innerHTML = '<div class="loader"></div> Sending...';
+            submitBtn.disabled = true;
+            
+            // Simulate form submission
+            setTimeout(function() {
+                alert('Thank you for your message! We will get back to you within 24 hours.');
+                document.getElementById('projectForm').reset();
+                
+                // Reset button
+                btnText.textContent = 'Send Message';
+                submitBtn.disabled = false;
+            }, 2000);
         });
 
         // Fade in elements on scroll
@@ -662,7 +782,29 @@
         
         // Initial check
         fadeInOnScroll();
+
+        // Add intersection observer for more advanced animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe service items for animation
+        document.querySelectorAll('.service-item').forEach(item => {
+            item.style.opacity = 0;
+            item.style.transform = 'translateY(20px)';
+            item.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            observer.observe(item);
+        });
     </script>
 </body>
-
 </html>
